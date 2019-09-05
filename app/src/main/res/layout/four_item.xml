@@ -28,10 +28,10 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="#FF7061"
+        android:layout_height="240dp"
+        android:background="#9092A5"
         android:gravity="center"
-        android:textColor="#FF7061"
+        android:textColor="#9092A5"
         android:textSize="10sp"
         android:textStyle="bold" />
 </merge>

@@ -36,27 +36,27 @@ import com.tmall.wireless.tangram.structure.view.ITangramViewLifeCycle;
 /**
  * Created by villadora on 15/8/24.
  */
-public class TestView extends FrameLayout implements ITangramViewLifeCycle {
+public class TowTwoTestView extends FrameLayout implements ITangramViewLifeCycle {
     private TextView textView;
     private BaseCell cell;
 
-    public TestView(Context context) {
+    public TowTwoTestView(Context context) {
         super(context);
         init();
     }
 
-    public TestView(Context context, AttributeSet attrs) {
+    public TowTwoTestView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TestView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TowTwoTestView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init(){
-        inflate(getContext(), R.layout.item, this);
+        inflate(getContext(), R.layout.four_item, this);
         textView = (TextView) findViewById(R.id.title);
     }
 

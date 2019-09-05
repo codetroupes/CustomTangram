@@ -2,7 +2,6 @@ package com.codetroupes.customtangram;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
@@ -11,18 +10,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.codetroupes.customtangram.rx.JSONArrayObservable;
-import com.codetroupes.customtangram.rx.ViewClickObservable;
 import com.codetroupes.customtangram.rx.lifecycle.ActivityLFEvent;
 import com.codetroupes.customtangram.rx.lifecycle.LifeCycleProviderImpl;
-import com.codetroupes.customtangram.view.RatioTextView;
-import com.codetroupes.customtangram.view.SimpleImgView;
-import com.codetroupes.customtangram.view.SingleImageView;
-import com.codetroupes.customtangram.view.TestView;
-import com.codetroupes.customtangram.view.TestViewHolder;
-import com.codetroupes.customtangram.view.TestViewHolderCell;
+import com.codetroupes.customtangram.view.TowTwoTestView;
+import com.codetroupes.customtangram.view.OneTwoTestView;
+import com.codetroupes.customtangram.view.OneOneTestView;
+import com.codetroupes.customtangram.view.TwoOneTestView;
 import com.libra.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -30,16 +25,12 @@ import com.squareup.picasso.Target;
 import com.tmall.wireless.tangram.TangramBuilder;
 import com.tmall.wireless.tangram.TangramEngine;
 
-import com.tmall.wireless.tangram.op.UpdateCellOp;
 import com.tmall.wireless.tangram.structure.BaseCell;
-import com.tmall.wireless.tangram.structure.viewcreator.ViewHolderCreator;
 import com.tmall.wireless.tangram.support.BannerSupport;
 
-import com.tmall.wireless.tangram.support.RxBannerScrolledListener;
 import com.tmall.wireless.tangram.support.async.CardLoadSupport;
 import com.tmall.wireless.tangram.util.IInnerImageSetter;
 import com.tmall.wireless.vaf.framework.VafContext;
-import com.tmall.wireless.vaf.virtualview.Helper.ImageLoader;
 import com.tmall.wireless.vaf.virtualview.view.image.ImageBase;
 
 
@@ -57,60 +48,30 @@ import io.reactivex.functions.Function;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
 
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.libra.Utils;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.LoadedFrom;
-import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
-import com.tmall.wireless.tangram.TangramBuilder;
-import com.tmall.wireless.tangram.TangramEngine;
 import com.tmall.wireless.tangram.dataparser.concrete.Card;
 
 import com.tmall.wireless.tangram.op.AppendGroupOp;
 import com.tmall.wireless.tangram.op.LoadGroupOp;
 import com.tmall.wireless.tangram.op.LoadMoreOp;
 import com.tmall.wireless.tangram.op.ParseSingleGroupOp;
-import com.tmall.wireless.tangram.op.UpdateCellOp;
 
 
-import com.tmall.wireless.tangram.structure.BaseCell;
-import com.tmall.wireless.tangram.structure.viewcreator.ViewHolderCreator;
-import com.tmall.wireless.tangram.support.BannerSupport;
 import com.tmall.wireless.tangram.support.RxBannerScrolledListener.ScrollEvent;
-import com.tmall.wireless.tangram.support.async.CardLoadSupport;
-import com.tmall.wireless.tangram.util.IInnerImageSetter;
-import com.tmall.wireless.tangram.util.ImageUtils;
-import com.tmall.wireless.vaf.framework.VafContext;
 import com.tmall.wireless.vaf.virtualview.Helper.ImageLoader.IImageLoaderAdapter;
 import com.tmall.wireless.vaf.virtualview.Helper.ImageLoader.Listener;
-import com.tmall.wireless.vaf.virtualview.view.image.ImageBase;
-import io.reactivex.Observable;
+
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import org.json.JSONArray;
@@ -197,12 +158,12 @@ public class MainActivity extends Activity {
         builder = TangramBuilder.newInnerBuilder(this);
 
         //Step 3: register business cells and cards
-        builder.registerCell(1, TestView.class);
-        builder.registerCell(10, SimpleImgView.class);
-        builder.registerCell(2, SimpleImgView.class);
-        builder.registerCell(4, RatioTextView.class);
-        builder.registerCell(110, TestViewHolderCell.class,new ViewHolderCreator<>(R.layout.item_holder, TestViewHolder.class, TextView.class));
-        builder.registerCell(199,SingleImageView.class);
+        builder.registerCell(1, OneOneTestView.class);
+        builder.registerCell(2, OneTwoTestView.class);
+        builder.registerCell(3, TwoOneTestView.class);
+        builder.registerCell(4, TowTwoTestView.class);
+
+
         builder.registerVirtualView("vvtest");
         //Step 4: new engine
         engine = builder.build();
@@ -241,70 +202,8 @@ public class MainActivity extends Activity {
         //Step 5: add card load support if you have card that loading cells async
         CardLoadSupport cardLoadSupport = new CardLoadSupport();
         engine.addCardLoadSupport(cardLoadSupport);
-        Observable<Card> loadCardObservable = cardLoadSupport.observeCardLoading();
-        Disposable dsp6 = loadCardObservable
-                .observeOn(Schedulers.io())
-                .map(new Function<Card, LoadGroupOp>() {
 
-                    @Override
-                    public LoadGroupOp apply(Card card) throws Exception {
-                        Log.d("TangramActivity", "loadCardObservable in map");
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        JSONArray cells = new JSONArray();
-                        for (int i = 0; i < 10; i++) {
-                            try {
-                                JSONObject obj = new JSONObject();
-                                obj.put("type", 1);
-                                obj.put("msg", "async loaded");
-                                JSONObject style = new JSONObject();
-                                style.put("bgColor", "#FF1111");
-                                obj.put("style", style.toString());
-                                cells.put(obj);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        List<BaseCell> result = engine.parseComponent(cells);
-                        LoadGroupOp loadGroupOp = new LoadGroupOp(card, result);
-                        return loadGroupOp;
-                    }
-                }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(cardLoadSupport.asDoLoadFinishConsumer());
-//        mCompositeDisposable.add(dsp6);
 
-        Observable<Card> loadMoreObservable = cardLoadSupport.observeCardLoadingMore();
-        Disposable dsp7 = loadMoreObservable.observeOn(Schedulers.io())
-                .map(new Function<Card, LoadMoreOp>() {
-                    @Override
-                    public LoadMoreOp apply(Card card) throws Exception {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.w("TangramActivity", "loadMoreObservable " + card.load + " page " + card.page);
-                        JSONArray cells = new JSONArray();
-                        for (int i = 0; i < 9; i++) {
-                            try {
-                                JSONObject obj = new JSONObject();
-                                obj.put("type", 1);
-                                obj.put("msg", "async page loaded, params: " + card.getParams().toString());
-                                cells.put(obj);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        List<BaseCell> cs = engine.parseComponent(cells);
-                        //mock loading 6 pages
-                        LoadMoreOp loadMoreOp = new LoadMoreOp(card, cs, card.page != 6);
-                        return loadMoreOp;
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(cardLoadSupport.asDoLoadMoreFinishConsumer());
-//        mCompositeDisposable.add(dsp7);
         engine.addSimpleClickSupport(new SampleClickSupport());
         BannerSupport bannerSupport = new BannerSupport();
         engine.register(BannerSupport.class, bannerSupport);
@@ -315,28 +214,7 @@ public class MainActivity extends Activity {
             }
         });
         mCompositeDisposable.add(dsp1);
-        final Disposable dsp2 = bannerSupport.observeSelected("banner1").subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.d("TangramActivity", "2 selected " + integer);
-            }
-        });
-//        mCompositeDisposable.add(dsp2);
 
-        Disposable dsp3 = bannerSupport.observeScrollStateChanged("banner2").subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.d("TangramActivity", "state changed " + integer);
-            }
-        });
-//        mCompositeDisposable.add(dsp3);
-        Disposable dsp4 = bannerSupport.observeScrolled("banner2").subscribe(new Consumer<ScrollEvent>() {
-            @Override
-            public void accept(ScrollEvent scrollEvent) throws Exception {
-                Log.d("TangramActivity", "scrolled " + scrollEvent.toString());
-            }
-        });
-//        mCompositeDisposable.add(dsp4);
         //Step 6: enable auto load more if your page's data is lazy loaded
         engine.enableAutoLoadMore(true);
 
@@ -355,70 +233,7 @@ public class MainActivity extends Activity {
         //Step 9: set an offset to fix card
         engine.getLayoutManager().setFixOffset(0, 40, 0, 0);
 
-        //Step 10: get tangram data and pass it to engine
-        // method 1, use simple consumer api
-        //Observable.fromCallable(new Callable<byte[]>() {
-        //    @Override
-        //    public byte[] call() throws Exception {
-        //        Log.d("TangramActivity", "call asset in thread " + Thread.currentThread().getName());
-        //
-        //        return getAssertsFile(getApplicationContext(), "data.json");
-        //    }
-        //}).subscribeOn(Schedulers.io())
-        //    .observeOn(Schedulers.computation())
-        //    .map(new Function<byte[], String>() {
-        //    @Override
-        //    public String apply(byte[] bytes) throws Exception {
-        //        Log.d("TangramActivity", "to string in thread " + Thread.currentThread().getName());
-        //
-        //        return new String(bytes);
-        //    }
-        //}).map(new Function<String, JSONArray>() {
-        //    @Override
-        //    public JSONArray apply(String s) throws Exception {
-        //        Log.d("TangramActivity", "to json in thread " + Thread.currentThread().getName());
-        //        return new JSONArray(s);
-        //    }
-        //}).observeOn(AndroidSchedulers.mainThread())
-        //    .doOnSubscribe(new Consumer<Disposable>() {
-        //        @Override
-        //        public void accept(Disposable disposable) throws Exception {
-        //            Log.d("TangramActivity", "do subscribe in thread " + Thread.currentThread().getName());
-        //        }
-        //    })
-        //    .subscribe(engine.asOriginalDataConsumer());
 
-        // method 2, use transformer api
-        //Observable.fromCallable(new Callable<byte[]>() {
-        //    @Override
-        //    public byte[] call() throws Exception {
-        //        Log.d("TangramActivity", "call asset in thread " + Thread.currentThread().getName());
-        //
-        //        return getAssertsFile(getApplicationContext(), "data.json");
-        //    }
-        //}).map(new Function<byte[], String>() {
-        //    @Override
-        //    public String apply(byte[] bytes) throws Exception {
-        //        Log.d("TangramActivity", "to string in thread " + Thread.currentThread().getName());
-        //
-        //        return new String(bytes);
-        //    }
-        //}).map(new Function<String, JSONArray>() {
-        //    @Override
-        //    public JSONArray apply(String s) throws Exception {
-        //        Log.d("TangramActivity", "to json in thread " + Thread.currentThread().getName());
-        //        return new JSONArray(s);
-        //    }
-        //}).subscribeOn(Schedulers.io())
-        //    .compose(engine.getDataTransformer())
-        //    .doOnSubscribe(new Consumer<Disposable>() {
-        //        @Override
-        //        public void accept(Disposable disposable) throws Exception {
-        //            Log.d("TangramActivity", "do subscribe in thread " + Thread.currentThread().getName());
-        //        }
-        //    })
-        //    .subscribe(engine.asParsedDataConsumer());
-        // method 3, emit json array and flat map to jsonobject
         Disposable dsp8 = Observable.create(new ObservableOnSubscribe<JSONArray>() {
             @Override
             public void subscribe(ObservableEmitter<JSONArray> emitter) throws Exception {
@@ -451,7 +266,7 @@ public class MainActivity extends Activity {
                 }).map(new Function<Card, AppendGroupOp>() {
                     @Override
                     public AppendGroupOp apply(Card card) throws Exception {
-                        Thread.sleep(300);
+
                         return new AppendGroupOp(card);
                     }
                 }).subscribeOn(Schedulers.io())
@@ -462,66 +277,7 @@ public class MainActivity extends Activity {
                         throwable.printStackTrace();
                     }
                 });
-//        mCompositeDisposable.add(dsp8);
-        //method 4, create from json
-        //Disposable dsp5 = Observable.create(new ObservableOnSubscribe<AppendGroupOp>() {
-        //    @Override
-        //    public void subscribe(ObservableEmitter<AppendGroupOp> emitter) throws Exception {
-        //        Log.d("TangramActivity", "subscribe in thread " + Thread.currentThread().getName());
-        //        String json = new String(getAssertsFile(getApplicationContext(), "data.json"));
-        //        JSONArray data = null;
-        //        try {
-        //            data = new JSONArray(json);
-        //        } catch (JSONException e) {
-        //            e.printStackTrace();
-        //        }
-        //        List<Card> cards = engine.parseData(data);
-        //        for (int i = 0, size = cards.size(); i < size; i++) {
-        //            emitter.onNext(new AppendGroupOp(cards.get(i)));
-        //            Log.d("TangramActivity", "emitter " + i);
-        //            try {
-        //                Thread.sleep(500);
-        //            } catch (Exception e) {
-        //                e.printStackTrace();
-        //            }
-        //        }
-        //        emitter.onComplete();
-        //    }
-        //}).subscribeOn(Schedulers.io())
-        //.observeOn(AndroidSchedulers.mainThread())
-        //.doOnComplete(new Action() {
-        //    @Override
-        //    public void run() throws Exception {
-        //        final BaseCell cell = (BaseCell) engine.getGroupBasicAdapter().getComponents().get(1);
-        //        mCompositeDisposable.add(ViewClickObservable.from(findViewById(R.id.last)).map(
-        //            new Function<Object, JSONObject>() {
-        //                @Override
-        //                public JSONObject apply(Object o) throws Exception {
-        //                    cell.extras.put("title", "Rx标题2");
-        //                    JSONObject jsonObject = cell.extras;
-        //                    return jsonObject;
-        //                }
-        //            }).subscribe(cell.asUpdateConsumer()));
-        //    }
-        //})
-        //.subscribe(engine.asAppendGroupConsumer());
-        //mCompositeDisposable.add(dsp5);
-
-//        mCompositeDisposable.add(ViewClickObservable.from(findViewById(R.id.first)).map(new Function<Object, UpdateCellOp>() {
-//            @Override
-//            public UpdateCellOp apply(Object o) throws Exception {
-//                BaseCell cell = (BaseCell)engine.getGroupBasicAdapter().getComponents().get(0);
-//                cell.extras.put("title", "Rx标题1");
-//                return new UpdateCellOp(cell);
-//            }
-//        }).subscribe(engine.asUpdateCellConsumer()));
-//
-//        mCompositeDisposable.add(ViewClickObservable.from(findViewById(R.id.count)).subscribe(new Consumer<Object>() {
-//            @Override
-//            public void accept(Object o) throws Exception {
-//                dsp2.dispose();
-//            }
-//        }));
+        mCompositeDisposable.add(dsp8);
     }
 
     @Override
